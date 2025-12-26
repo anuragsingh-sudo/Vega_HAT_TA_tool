@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Highspring || TA Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loginView" class="view active">
+    <div class="card">
+      <div class="card-header">
+        <img class="card-logo" src="https://image2url.com/images/1759863659854-385aa92d-a47f-4073-8196-7079618a731d.png">
+        <h1>Enrollment Portal</h1>
+      </div>
+      <div class="card-body">
+        <div id="login-message" class="message-box"></div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" class="input-field" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="input-field" required>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <button type="submit" form="loginForm" id="loginButton" class="btn btn-primary">
+          <span class="btn-text">Login</span>
+          <div class="loader"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="appView" style="display:none;">
+    <div class="top-bar">
+      <img src="https://image2url.com/images/1759863659854-385aa92d-a47f-4073-8196-7079618a731d.png" class="logo">
+      <div style="flex-grow:1; text-align:right; margin-right:20px;">
+          <span id="welcome-message" style="font-weight:bold; color:#002b5c;"></span>
+      </div>
+      <button class="btn logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+
+    <div class="app-container">
+      <div class="sidebar">
+        <br>
+        <div class="sidebar-header">Menu</div>
+        <div class="nav-item active" onclick="showView('defaultView', this)">Home</div>
+        <div class="nav-item admin-only" onclick="showView('onboardUserView', this)">Onboard New User</div>
+        <div class="nav-item" onclick="showView('onboardCandidateView', this)">Enroll New Candidate</div>
+        <div class="nav-item" onclick="showView('searchView', this)">
+          <span id="logs-title">My Candidate Logs</span>
+        </div>
+      </div>
+      
+      <div class="main-content">
+        <div id="defaultView" class="content-view active">
+           <div class="default-content">
+              <img src="https://image2url.com/images/1759863659854-385aa92d-a47f-4073-8196-7079618a731d.png" class="logo-large">
+              <h2>Welcome to the TA Enrollment Portal</h2>
+              <p>Please select an option from the menu to proceed.</p>
+           </div>
+        </div>
+
+        <div id="onboardUserView" class="content-view admin-only">
+          <div class="view-header">
+            <h2>Onboard New Member</h2>
+          </div>
+          <div id="user-message" class="message-box"></div>
+          <form id="onboardUserForm">
+            <div class="form-group"><label>First Name</label><input type="text" id="user-fname" class="input-field" required></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="user-lname" class="input-field" required></div>
+            <div class="form-group"><label>Email</label><input type="email" id="user-email" class="input-field" required></div>
+            <div class="form-group"><label>Role</label>
+              <select id="user-role" class="input-field" required>
+                <option value="Manager">Manager</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary"><span class="btn-text">Create User</span><div class="loader"></div></button>
+          </form>
+          
+          <div class="search-section" style="margin-top:40px;">
+             <h3>Search Members</h3>
+             <form id="memberSearchForm">
+               <div class="member-search-grid">
+                  <input type="text" id="memberSearchTerm" class="input-field" placeholder="Search member...">
+                  <select id="memberRoleFilter" class="input-field"><option value="">All Roles</option><option value="Admin">Admin</option><option value="Manager">Manager</option></select>
+                  <button type="submit" class="btn btn-secondary">Search</button>
+               </div>
+             </form>
+             <div class="results-table-container">
+               <table class="results-table">
+                 <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+                 <tbody id="memberResultsBody"></tbody>
+               </table>
+             </div>
+          </div>
+        </div>
+
+        <div id="onboardCandidateView" class="content-view">
+          <div class="view-header"><h2>Enroll New Candidate</h2></div>
+          <div id="candidate-message" class="message-box"></div>
+          <form id="onboardCandidateForm">
+             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+               <div class="form-group"><label>TA Name</label><input type="text" id="ta-name" class="input-field" readonly></div>
+               <div class="form-group"><label>TA Email</label><input type="text" id="ta-email" class="input-field" readonly></div>
+             </div>
+             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+             <div class="form-group"><label>Candidate First Name</label><input type="text" id="candidate-fname" class="input-field" required></div>
+             <div class="form-group"><label>Candidate Last Name</label><input type="text" id="candidate-lname" class="input-field" required></div>
+             <div class="form-group"><label>Candidate Email</label><input type="email" id="candidate-email" class="input-field" required></div>
+             <div class="form-group"><label>Contact Number</label><input type="text" id="candidate-contact" class="input-field" required></div>
+             <div class="form-group"><label>Programme</label><select id="program" class="input-field" required><option value="" disabled selected>Loading...</option></select></div>
+             <div class="form-group"><label>Project</label><select id="project" class="input-field" disabled required><option value="" disabled selected>Select a programme first</option></select></div>
+             <button type="submit" class="btn btn-primary"><span class="btn-text">Enroll & Invite</span><div class="loader"></div></button>
+          </form>
+        </div>
+        
+        <div id="searchView" class="content-view">
+          <div class="view-header">
+            <div class="back-arrow" onclick="showView('defaultView')">&#11013;</div>
+            <h2><span id="logs-view-title">My Candidate Logs</span></h2>
+          </div>
+          <div id="search-message" class="message-box"></div>
+          
+          <div class="search-section">
+            <h3>Search Candidates</h3>
+            <form id="candidateSearchForm" class="filter-group">
+              <div class="candidate-search-grid">
+                <input type="text" id="candidateSearchTerm" class="input-field" placeholder="Search by name, email...">
+                <input type="date" id="candidateDateFilter" class="input-field">
+                <select id="candidateTaFilter" class="input-field admin-only"><option value="">All Managers</option></select>
+                <select id="candidateProgFilter" class="input-field"><option value="">All Programmes</option></select>
+                <button type="submit" class="btn btn-primary"><span class="btn-text">Search</span><div class="loader"></div></button>
+              </div>
+            </form>
+            <div class="results-table-container">
+              <table class="results-table" id="candidate-results-table">
+                <thead>
+                  <tr>
+                    <th>Date</th><th class="admin-only">Manager Name</th><th>Candidate Name</th><th>Email</th>
+                    <th>Enrollment ID</th><th>Programme</th><th>Status</th><th>Result</th><th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="candidateResultsBody"></tbody>
+              </table>
+            </div>
+            <button id="export-btn" class="btn btn-secondary" style="width: auto; padding: 10px 20px; margin-top: 20px;">Export to CSV</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="client.js"></script>
+</body>
+</html>
